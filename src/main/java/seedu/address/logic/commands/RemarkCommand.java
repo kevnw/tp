@@ -71,7 +71,6 @@ public class RemarkCommand extends Command {
 
         return new CommandResult(generateSuccessMessage(editedPerson));
     }
-    
     @Override
     public boolean equals(Object other) {
         // short circuit if same object
