@@ -8,10 +8,12 @@ public class Todo extends Task {
      * The format of inputted dates that the class can accept.
      */
     private static final DateTimeFormatter INPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm");
+
     /**
      * The format of outputted dates by the class.
      */
     private static final DateTimeFormatter OUTPUT_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("MMM d yyyy HHmm");
+
     /**
      * The deadline of the task to be completed by.
      */
@@ -26,6 +28,19 @@ public class Todo extends Task {
      */
     public Todo(String description, String deadline) {
         super(description);
+        this.deadline = LocalDateTime.parse(deadline, INPUT_DATE_TIME_FORMAT);
+    }
+
+    /**
+     * Constructs a task that has not been completed
+     * with a brief description and deadline for the task to be completed by.
+     *
+     * @param description a brief description of the deadline.
+     * @param deadline    a String in a specific format (inputFormatter) which specifies a date.
+     * @param link        a Link in URL format for the collaborative folder.
+     */
+    public Todo(String description, String deadline, Link link) {
+        super(description, link);
         this.deadline = LocalDateTime.parse(deadline, INPUT_DATE_TIME_FORMAT);
     }
 

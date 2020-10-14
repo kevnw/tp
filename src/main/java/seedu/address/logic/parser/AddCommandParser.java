@@ -1,22 +1,13 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_ENDDATE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_ENDTIME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_STARTDATE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_STARTTIME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TIME;
+import static seedu.address.logic.parser.CliSyntax.*;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import seedu.address.logic.commands.AddCommand;
 import seedu.address.logic.commands.add.AddContactCommand;
 import seedu.address.logic.commands.add.AddEventCommand;
@@ -29,6 +20,7 @@ import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
 import seedu.address.model.tag.Tag;
 import seedu.address.model.task.Event;
+import seedu.address.model.task.Link;
 import seedu.address.model.task.Todo;
 
 /**
@@ -65,7 +57,8 @@ public class AddCommandParser implements Parser<AddCommand> {
             return new AddContactCommand(person);
         } else if (splitArgs[0].trim().equals("todo")) {
             ArgumentMultimap argMultimap =
-                    ArgumentTokenizer.tokenize(" " + splitArgs[1], PREFIX_DESCRIPTION, PREFIX_DATE, PREFIX_TIME);
+                    ArgumentTokenizer.tokenize(" " + splitArgs[1], PREFIX_DESCRIPTION,
+                            PREFIX_DATE, PREFIX_TIME, PREFIX_LINK);
             if (!arePrefixesPresent(argMultimap, PREFIX_DESCRIPTION, PREFIX_DATE, PREFIX_TIME)
                     || !argMultimap.getPreamble().isEmpty()) {
                 throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
@@ -74,9 +67,16 @@ public class AddCommandParser implements Parser<AddCommand> {
             String description = argMultimap.getValue(PREFIX_DESCRIPTION).get().trim();
             String date = argMultimap.getValue(PREFIX_DATE).get().trim();
             String time = argMultimap.getValue(PREFIX_TIME).get().trim();
+            Optional<String> linkString = argMultimap.getValue(PREFIX_LINK);
             String deadline = date + " " + time;
-            Todo todo = new Todo(description, deadline);
-            return new AddTodoCommand(todo);
+            if (linkString.isPresent()) {
+                Link link = ParserUtil.parseLink(linkString.get().trim());
+                Todo todo = new Todo(description, deadline, link);
+                return new AddTodoCommand(todo);
+            } else {
+                Todo todo = new Todo(description, deadline);
+                return new AddTodoCommand(todo);
+            }
         } else {
             ArgumentMultimap argMultimap =
                     ArgumentTokenizer.tokenize(" " + splitArgs[1], PREFIX_DESCRIPTION, PREFIX_STARTDATE,

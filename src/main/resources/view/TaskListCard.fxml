@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Hyperlink?>
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <GridPane HBox.hgrow="ALWAYS">
     <columnConstraints>
@@ -30,6 +31,7 @@
       </HBox>
       <Label fx:id="dateTime" styleClass="cell_small_label" text="\$dateTime" />
          <Label fx:id="statusIcon" layoutX="25.0" layoutY="63.0" styleClass="cell_small_label" text="\$statusIcon" />
+      <Hyperlink fx:id="link" styleClass="cell_small_label" text="No link available"/>
     </VBox>
       <rowConstraints>
          <RowConstraints />

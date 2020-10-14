@@ -6,8 +6,11 @@ public abstract class Task {
     /** A brief description of the task. */
     protected String description;
 
-    /** Tracks the completion of the task */
+    /** Tracks the completion of the task. */
     protected boolean isDone;
+
+    /** The URL associated with the task. */
+    protected Link link;
 
     /**
      * Constructs a task that has not been completed with a description.
@@ -17,6 +20,18 @@ public abstract class Task {
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+    }
+
+    /**
+     * Constructs a task that has not been completed with a description and a link.
+     *
+     * @param description a brief description of the task
+     * @param link the URl for the task
+     */
+    public Task(String description, Link link) {
+        this.description = description;
+        this.isDone = false;
+        this.link = link;
     }
 
     /**
@@ -46,11 +61,20 @@ public abstract class Task {
      *
      * @return the description of the task.
      */
-
     public String getDescription() {
         return this.description;
     }
 
+    /**
+     * Returns the URL of the task as a String.
+     */
+    public String getLink() {
+        if (this.link != null) {
+            return this.link.getValue();
+        } else {
+            return "";
+        }
+    }
     /**
      * Indicates that the task has been completed.
      */
